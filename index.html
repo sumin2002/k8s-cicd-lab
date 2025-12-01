@@ -2,28 +2,108 @@
 <html lang="ko">
 <head>
     <meta charset="UTF-8">
-    <title>금융 챗봇 데이터 센터</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>금융 AI 챗봇 서비스</title>
     <style>
-        body { font-family: sans-serif; padding: 20px; background-color: #f4f6f8; }
-        .card { background: white; padding: 20px; border-radius: 8px; margin-bottom: 15px; box-shadow: 0 2px 4px rgba(0,0,0,0.1); }
-        h1 { color: #0056b3; border-bottom: 2px solid #0056b3; padding-bottom: 10px; }
-        .rate { color: #d63384; font-weight: bold; font-size: 1.2em; }
+        body { font-family: 'Noto Sans KR', sans-serif; background-color: #e9ecef; display: flex; justify-content: center; align-items: center; height: 100vh; margin: 0; }
+        .chat-container { width: 400px; height: 600px; background-color: #fff; border-radius: 20px; box-shadow: 0 10px 20px rgba(0,0,0,0.1); display: flex; flex-direction: column; overflow: hidden; }
+        .header { background-color: #0046bb; color: white; padding: 20px; text-align: center; font-weight: bold; font-size: 1.2em; }
+        .chat-box { flex: 1; padding: 20px; overflow-y: auto; background-color: #f1f3f5; }
+        .message { margin-bottom: 15px; display: flex; }
+        .message.bot { justify-content: flex-start; }
+        .message.user { justify-content: flex-end; }
+        .bubble { max-width: 70%; padding: 12px 16px; border-radius: 15px; font-size: 0.95em; line-height: 1.4; }
+        .bot .bubble { background-color: white; color: #333; border: 1px solid #ddd; border-top-left-radius: 0; }
+        .user .bubble { background-color: #0046bb; color: white; border-top-right-radius: 0; }
+        .input-area { display: flex; padding: 10px; background-color: white; border-top: 1px solid #ddd; }
+        input { flex: 1; padding: 12px; border: 1px solid #ddd; border-radius: 20px; outline: none; }
+        button { margin-left: 10px; padding: 10px 20px; background-color: #0046bb; color: white; border: none; border-radius: 20px; cursor: pointer; font-weight: bold; }
+        button:hover { background-color: #003690; }
+        
+        /* 중요: 업데이트 되는 데이터 강조 */
+        .highlight { color: #d63384; font-weight: bold; }
+        .alert-box { background-color: #ffebee; color: #c62828; padding: 10px; border-radius: 5px; margin-bottom: 10px; font-size: 0.9em; display: none; } /* 평소엔 숨김 */
     </style>
 </head>
 <body>
-    <h1>🏦 이번 달 추천 금융상품 (v1.0)</h1>
-    <p>챗봇이 현재 이 데이터를 고객에게 안내 중입니다.</p>
 
-    <div class="card">
-        <h3>💰 직장인 든든 예금</h3>
-        <p>기본 금리: <span class="rate">3.5%</span></p>
-        <p>특징: 급여 이체 시 우대 금리 적용</p>
-    </div>
+<div class="chat-container">
+    <div class="header">🏦 스마트 금융 챗봇 (v1.0)</div>
+    <div class="chat-box" id="chatBox">
+        
+        <div id="securityAlert" class="alert-box">
+            🚨 [긴급] 검찰 사칭 보이스피싱 주의보!
+        </div>
 
-    <div class="card">
-        <h3>🏠 내 집 마련 대출</h3>
-        <p>최저 금리: <span class="rate">5.2%</span></p>
-        <p>한도: 최대 5억 원</p>
+        <div class="message bot">
+            <div class="bubble">
+                안녕하세요! 무엇을 도와드릴까요?<br>
+                (예: "금리 알려줘", "추천 상품")
+            </div>
+        </div>
     </div>
+    <div class="input-area">
+        <input type="text" id="userInput" placeholder="메시지를 입력하세요..." onkeypress="if(event.keyCode==13) sendMessage()">
+        <button onclick="sendMessage()">전송</button>
+    </div>
+</div>
+
+<script>
+    // ==========================================
+    // [시나리오 데이터 관리 영역]
+    // 운영팀은 여기 값만 바꾸면 됩니다!
+    // ==========================================
+    
+    // 시나리오 1 & 2: 금리 정보
+    const currentRate = "3.5%";  // <-- 나중에 이걸 4.0%로 바꾸면 됨!
+    
+    // 시나리오 3: 보안 공지 활성화 여부
+    const showSecurityAlert = false; // <-- 나중에 이걸 true로 바꾸면 됨!
+
+    // ==========================================
+
+    // 페이지 로드 시 공지사항 체크
+    if (showSecurityAlert) {
+        document.getElementById('securityAlert').style.display = 'block';
+    }
+
+    function sendMessage() {
+        const input = document.getElementById('userInput');
+        const chatBox = document.getElementById('chatBox');
+        const text = input.value.trim();
+        if (text === "") return;
+
+        // 사용자 메시지 표시
+        addMessage(text, 'user');
+        input.value = "";
+
+        // 챗봇 응답 (0.5초 뒤)
+        setTimeout(() => {
+            let reply = "죄송합니다. 제가 이해하지 못하는 질문입니다.";
+            
+            if (text.includes("금리") || text.includes("이자")) {
+                reply = `현재 직장인 예금의 기본 금리는 <span class="highlight">${currentRate}</span> 입니다.<br>우대 조건 달성 시 추가 혜택이 있습니다.`;
+            } 
+            else if (text.includes("상품") || text.includes("추천")) {
+                reply = `이번 달 추천 상품은 <b>'직장인 든든 예금'</b>입니다.<br>연 <span class="highlight">${currentRate}</span>의 높은 금리를 제공합니다.`;
+            }
+            else if (text.includes("안녕")) {
+                reply = "반갑습니다! 오늘도 좋은 하루 되세요. 금융 관련 궁금한 점이 있으신가요?";
+            }
+
+            addMessage(reply, 'bot');
+        }, 500);
+    }
+
+    function addMessage(text, sender) {
+        const chatBox = document.getElementById('chatBox');
+        const msgDiv = document.createElement('div');
+        msgDiv.className = `message ${sender}`;
+        msgDiv.innerHTML = `<div class="bubble">${text}</div>`;
+        chatBox.appendChild(msgDiv);
+        chatBox.scrollTop = chatBox.scrollHeight;
+    }
+</script>
+
 </body>
 </html>
