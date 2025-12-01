@@ -5,14 +5,30 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>금융 AI 챗봇 서비스</title>
     <style>
+        /* 스타일은 그대로 유지하되 스크롤바 디자인 추가 */
         body { font-family: 'Noto Sans KR', sans-serif; background-color: #e9ecef; display: flex; justify-content: center; align-items: center; height: 100vh; margin: 0; }
-        .chat-container { width: 400px; height: 600px; background-color: #fff; border-radius: 20px; box-shadow: 0 10px 20px rgba(0,0,0,0.1); display: flex; flex-direction: column; overflow: hidden; }
+        
+        /* 전체 레이아웃: 왼쪽(데이터 화면) + 오른쪽(챗봇) */
+        .main-wrapper { display: flex; gap: 20px; width: 900px; height: 700px; }
+        
+        /* 1. 왼쪽: 데이터 관리자 화면 (상품 리스트) */
+        .admin-panel { flex: 1; background: white; padding: 25px; border-radius: 20px; box-shadow: 0 10px 20px rgba(0,0,0,0.1); overflow-y: auto; }
+        .admin-header { font-size: 1.2em; font-weight: bold; color: #0046bb; border-bottom: 2px solid #0046bb; padding-bottom: 10px; margin-bottom: 20px; }
+        .product-card { border: 1px solid #eee; padding: 15px; border-radius: 10px; margin-bottom: 15px; transition: transform 0.2s; }
+        .product-card:hover { transform: translateY(-3px); box-shadow: 0 5px 10px rgba(0,0,0,0.05); }
+        .product-title { font-weight: bold; font-size: 1.1em; margin-bottom: 5px; color: #333; }
+        .product-desc { font-size: 0.9em; color: #666; margin-bottom: 5px; }
+        .tag { display: inline-block; background: #f1f3f5; color: #495057; padding: 3px 8px; border-radius: 4px; font-size: 0.8em; margin-right: 5px; }
+        .highlight-rate { color: #d63384; font-weight: bold; font-size: 1.1em; }
+
+        /* 2. 오른쪽: 챗봇 화면 */
+        .chat-container { width: 350px; background-color: #fff; border-radius: 20px; box-shadow: 0 10px 20px rgba(0,0,0,0.1); display: flex; flex-direction: column; overflow: hidden; }
         .header { background-color: #0046bb; color: white; padding: 20px; text-align: center; font-weight: bold; font-size: 1.2em; }
         .chat-box { flex: 1; padding: 20px; overflow-y: auto; background-color: #f1f3f5; }
         .message { margin-bottom: 15px; display: flex; }
         .message.bot { justify-content: flex-start; }
         .message.user { justify-content: flex-end; }
-        .bubble { max-width: 70%; padding: 12px 16px; border-radius: 15px; font-size: 0.95em; line-height: 1.4; }
+        .bubble { max-width: 75%; padding: 12px 16px; border-radius: 15px; font-size: 0.95em; line-height: 1.4; word-break: keep-all; }
         .bot .bubble { background-color: white; color: #333; border: 1px solid #ddd; border-top-left-radius: 0; }
         .user .bubble { background-color: #0046bb; color: white; border-top-right-radius: 0; }
         .input-area { display: flex; padding: 10px; background-color: white; border-top: 1px solid #ddd; }
@@ -20,49 +36,85 @@
         button { margin-left: 10px; padding: 10px 20px; background-color: #0046bb; color: white; border: none; border-radius: 20px; cursor: pointer; font-weight: bold; }
         button:hover { background-color: #003690; }
         
-        /* 중요: 업데이트 되는 데이터 강조 */
+        /* 공통: 강조 및 경고 */
         .highlight { color: #d63384; font-weight: bold; }
-        .alert-box { background-color: #ffebee; color: #c62828; padding: 10px; border-radius: 5px; margin-bottom: 10px; font-size: 0.9em; display: none; } /* 평소엔 숨김 */
+        .alert-box { background-color: #ffebee; color: #c62828; padding: 12px; border-radius: 8px; margin-bottom: 15px; font-size: 0.9em; font-weight: bold; display: none; border: 1px solid #ffcdd2; }
     </style>
 </head>
 <body>
 
-<div class="chat-container">
-    <div class="header">🏦 스마트 금융 챗봇 (v1.0)</div>
-    <div class="chat-box" id="chatBox">
+<div class="main-wrapper">
+    
+    <div class="admin-panel">
+        <div class="admin-header">🏦 챗봇 지식 베이스 (상품 데이터)</div>
         
-        <div id="securityAlert" class="alert-box">
-            🚨 [긴급] 검찰 사칭 보이스피싱 주의보!
+        <div class="product-card">
+            <div class="product-title">💰 직장인 든든 예금</div>
+            <div class="product-desc">급여 이체 시 우대 금리 제공</div>
+            <div><span class="tag">예금</span> <span class="tag">인기</span> 기본 금리: <span class="highlight-rate">3.5%</span></div>
         </div>
 
-        <div class="message bot">
-            <div class="bubble">
-                안녕하세요! 무엇을 도와드릴까요?<br>
-                (예: "금리 알려줘", "추천 상품")
-            </div>
+        <div class="product-card">
+            <div class="product-title">📈 매일매일 적금</div>
+            <div class="product-desc">매일 커피값 아껴서 목돈 만들기</div>
+            <div><span class="tag">적금</span> <span class="tag">단기</span> 최고 금리: <span class="highlight-rate">6.0%</span></div>
+        </div>
+
+        <div class="product-card">
+            <div class="product-title">🏠 내 집 마련 대출</div>
+            <div class="product-desc">무주택자를 위한 저금리 대출</div>
+            <div><span class="tag">대출</span> <span class="tag">주택</span> 최저 금리: <span class="highlight-rate">5.2%</span></div>
+        </div>
+
+        <div class="product-card">
+            <div class="product-title">💳 프리미엄 라이프 카드</div>
+            <div class="product-desc">전 가맹점 1.5% 무제한 할인</div>
+            <div><span class="tag">카드</span> <span class="tag">신용</span> 연회비: 1만원</div>
+        </div>
+
+        <div class="product-card">
+            <div class="product-title">🌱 청년 도약 계좌</div>
+            <div class="product-desc">청년의 미래를 위한 정부 지원금</div>
+            <div><span class="tag">정부지원</span> <span class="tag">비과세</span> 정부 기여금 매칭</div>
         </div>
     </div>
-    <div class="input-area">
-        <input type="text" id="userInput" placeholder="메시지를 입력하세요..." onkeypress="if(event.keyCode==13) sendMessage()">
-        <button onclick="sendMessage()">전송</button>
+
+    <div class="chat-container">
+        <div class="header">🤖 스마트 챗봇</div>
+        <div class="chat-box" id="chatBox">
+            
+            <div id="securityAlert" class="alert-box">
+                🚨 [긴급] 검찰 사칭 보이스피싱 주의보!
+            </div>
+
+            <div class="message bot">
+                <div class="bubble">
+                    안녕하세요! 무엇을 도와드릴까요?<br>
+                    (예: "금리 알려줘", "추천 상품")
+                </div>
+            </div>
+        </div>
+        <div class="input-area">
+            <input type="text" id="userInput" placeholder="질문하기..." onkeypress="if(event.keyCode==13) sendMessage()">
+            <button onclick="sendMessage()">전송</button>
+        </div>
     </div>
+
 </div>
 
 <script>
     // ==========================================
     // [시나리오 데이터 관리 영역]
-    // 운영팀은 여기 값만 바꾸면 됩니다!
     // ==========================================
     
-    // 시나리오 1 & 2: 금리 정보
-    const currentRate = "3.5%";  // <-- 나중에 이걸 4.0%로 바꾸면 됨!
+    // 시나리오 1 & 2: 금리 정보 변수
+    const currentRate = "3.5%";  // <-- 나중에 이걸 "4.0%"로 바꾸면 됨!
     
-    // 시나리오 3: 보안 공지 활성화 여부
+    // 시나리오 3: 보안 공지 활성화 변수
     const showSecurityAlert = false; // <-- 나중에 이걸 true로 바꾸면 됨!
 
     // ==========================================
 
-    // 페이지 로드 시 공지사항 체크
     if (showSecurityAlert) {
         document.getElementById('securityAlert').style.display = 'block';
     }
@@ -73,22 +125,25 @@
         const text = input.value.trim();
         if (text === "") return;
 
-        // 사용자 메시지 표시
         addMessage(text, 'user');
         input.value = "";
 
-        // 챗봇 응답 (0.5초 뒤)
         setTimeout(() => {
-            let reply = "죄송합니다. 제가 이해하지 못하는 질문입니다.";
+            let reply = "죄송합니다. 이해하지 못했습니다.";
             
             if (text.includes("금리") || text.includes("이자")) {
-                reply = `현재 직장인 예금의 기본 금리는 <span class="highlight">${currentRate}</span> 입니다.<br>우대 조건 달성 시 추가 혜택이 있습니다.`;
+                reply = `현재 <b>직장인 예금</b>의 기본 금리는 <span class="highlight">${currentRate}</span> 입니다.<br>적금 상품은 최고 6.0%까지 제공됩니다.`;
             } 
             else if (text.includes("상품") || text.includes("추천")) {
-                reply = `이번 달 추천 상품은 <b>'직장인 든든 예금'</b>입니다.<br>연 <span class="highlight">${currentRate}</span>의 높은 금리를 제공합니다.`;
+                reply = `고객님께 딱 맞는 상품 5가지가 준비되어 있습니다!<br><br>
+                         1. 직장인 든든 예금 (연 <span class="highlight">${currentRate}</span>)<br>
+                         2. 매일매일 적금<br>
+                         3. 내 집 마련 대출<br>
+                         4. 프리미엄 카드<br>
+                         5. 청년 도약 계좌`;
             }
             else if (text.includes("안녕")) {
-                reply = "반갑습니다! 오늘도 좋은 하루 되세요. 금융 관련 궁금한 점이 있으신가요?";
+                reply = "반갑습니다! 금융 관련 궁금한 점을 물어봐 주세요.";
             }
 
             addMessage(reply, 'bot');
