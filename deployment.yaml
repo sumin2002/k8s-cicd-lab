@@ -14,6 +14,6 @@ spec:
     spec:
       containers:
       - name: my-web
-        image: chunsumin/my-web-app:f62988932372eee58d3032c7d506f9d2676563bb
+        image: chunsumin/my-web-app:d0964f3421c631f0f645dc5306879e3026e88ab4
         ports:
         - containerPort: 80
