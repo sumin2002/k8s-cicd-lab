@@ -12,8 +12,11 @@ spec:
       labels:
         app: my-chatbot
     spec:
+      imagePullSecrets:       # 👈 [추가] Harbor 열쇠 사용 선언
+      - name: regcred
       containers:
       - name: my-web
-        image: chunsumin/my-web-app:fa877b7fca4f5293a61eab83abdaa9b7fb64b8cb
+        # 👇 [수정] 주소 앞에 Harbor IP 붙이기
+        image: 192.168.1.19/library/my-web-app:latest 
         ports:
         - containerPort: 80
