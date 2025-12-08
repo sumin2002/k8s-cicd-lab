@@ -13,7 +13,7 @@ spec:
         app: my-chatbot
     spec:
       containers:
-      - name: my-chatbot
+      - name: my-web
         image: chunsumin/my-web-app:e7de80a715b40426a6c827fa0da807fd0f097035
         ports:
         - containerPort: 80
