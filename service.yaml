@@ -1,11 +1,12 @@
 apiVersion: v1
 kind: Service
 metadata:
-  name: my-web-service
+  name: my-chatbot-service
 spec:
-  selector:
-    app: my-web
+  # type 라인이 없으면 자동으로 ClusterIP가 됩니다.
   ports:
-    - protocol: TCP
-      port: 80
-      targetPort: 80
+    - port: 80
+      targetPort: 8080
+      # nodePort 라인 삭제됨
+  selector:
+    app: my-chatbot
