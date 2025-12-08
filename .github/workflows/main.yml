@@ -6,25 +6,22 @@ on:
 
 jobs:
   build:
-    runs-on: self-hosted  # 👈 [중요] 아까 설치한 집사(Runner) 사용!
+    runs-on: self-hosted
 
     steps:
     - uses: actions/checkout@v3
 
     - name: Build Docker Image
-      # Harbor 주소와 이미지 이름을 결합해서 빌드
+      # [수정됨] 에러 나던 build-push-action 대신, 표준 명령어 사용!
       run: docker build -t ${{ secrets.HARBOR_URL }}/library/my-web-app:${{ github.sha }} .
 
     - name: Login to Harbor
-      # Harbor에 로그인 (보안상 패스워드 직접 입력 대신 stdin 사용)
       run: echo "${{ secrets.HARBOR_PASSWORD }}" | docker login ${{ secrets.HARBOR_URL }} -u ${{ secrets.HARBOR_USERNAME }} --password-stdin
 
     - name: Push to Harbor
-      # 빌드한 이미지를 Harbor로 전송
       run: docker push ${{ secrets.HARBOR_URL }}/library/my-web-app:${{ github.sha }}
 
     - name: Update Kubernetes Manifest
-      # deployment.yaml 파일의 이미지 태그를 최신 버전으로 수정
       run: |
         sed -i "s|image: .*|image: ${{ secrets.HARBOR_URL }}/library/my-web-app:${{ github.sha }}|g" deployment.yaml
         git config --global user.name 'GitHub Actions'
