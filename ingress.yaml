@@ -1,11 +1,11 @@
 apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
-  name: my-web-ingress
+  name: my-chatbot-ingress
   annotations:
-    nginx.ingress.kubernetes.io/rewrite-target: /
+    # NGINX Ingress Controller를 쓰겠다고 명시
+    kubernetes.io/ingress.class: "nginx"
 spec:
-  ingressClassName: nginx
   rules:
   - http:
       paths:
@@ -13,6 +13,6 @@ spec:
         pathType: Prefix
         backend:
           service:
-            name: my-web-service
+            name: my-chatbot-service  # <--- 주의! service.yaml의 metadata.name과 같아야 함
             port:
-              number: 80
+              number: 80              # <--- 주의! service.yaml의 port: 80과 같아야 함
