@@ -6,7 +6,7 @@ spec:
   # type 라인이 없으면 자동으로 ClusterIP가 됩니다.
   ports:
     - port: 80
-      targetPort: 8080
+      targetPort: 80
       # nodePort 라인 삭제됨
   selector:
     app: my-chatbot
