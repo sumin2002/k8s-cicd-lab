@@ -1,39 +1,34 @@
-name: CI/CD Pipeline
+name: CI/CD to Harbor
 
 on:
   push:
     branches: [ "main" ]
 
 jobs:
-  build-push-update:
-    runs-on: self-hosted
-    permissions:
-      contents: write
+  build:
+    runs-on: self-hosted  # 👈 [중요] 아까 설치한 집사(Runner) 사용!
+
     steps:
-    - name: Checkout code
-      uses: actions/checkout@v3
+    - uses: actions/checkout@v3
 
-    - name: Login to DockerHub
-      uses: docker/login-action@v2
-      with:
-        username: ${{ secrets.DOCKER_USERNAME }}
-        password: ${{ secrets.DOCKER_PASSWORD }}
+    - name: Build Docker Image
+      # Harbor 주소와 이미지 이름을 결합해서 빌드
+      run: docker build -t ${{ secrets.HARBOR_URL }}/library/my-web-app:${{ github.sha }} .
 
-    - name: Build and push Docker image
-      uses: docker/build-push-action@v4
-      with:
-        context: .
-        push: true
-        tags: ${{ secrets.DOCKER_USERNAME }}/my-web-app:${{ github.sha }}
+    - name: Login to Harbor
+      # Harbor에 로그인 (보안상 패스워드 직접 입력 대신 stdin 사용)
+      run: echo "${{ secrets.HARBOR_PASSWORD }}" | docker login ${{ secrets.HARBOR_URL }} -u ${{ secrets.HARBOR_USERNAME }} --password-stdin
 
-    - name: Update K8s Manifest
+    - name: Push to Harbor
+      # 빌드한 이미지를 Harbor로 전송
+      run: docker push ${{ secrets.HARBOR_URL }}/library/my-web-app:${{ github.sha }}
+
+    - name: Update Kubernetes Manifest
+      # deployment.yaml 파일의 이미지 태그를 최신 버전으로 수정
       run: |
-        sed -i "s|image: .*|image: ${{ secrets.DOCKER_USERNAME }}/my-web-app:${{ github.sha }}|g" deployment.yaml
-        
-    - name: Commit and Push changes
-      run: |
-        git config --global user.name "GitHub Actions"
-        git config --global user.email "actions@github.com"
+        sed -i "s|image: .*|image: ${{ secrets.HARBOR_URL }}/library/my-web-app:${{ github.sha }}|g" deployment.yaml
+        git config --global user.name 'GitHub Actions'
+        git config --global user.email 'actions@github.com'
         git add deployment.yaml
         git commit -m "Update image tag to ${{ github.sha }}"
         git push
