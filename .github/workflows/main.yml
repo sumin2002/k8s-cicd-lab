@@ -28,4 +28,8 @@ jobs:
         git config --global user.email 'actions@github.com'
         git add deployment.yaml
         git commit -m "Update image tag to ${{ github.sha }}"
+        
+        # 👇 [여기가 핵심!] 원격 저장소의 최신 내용을 먼저 가져와서 합칩니다.
+        git pull origin main --rebase
+        
         git push
