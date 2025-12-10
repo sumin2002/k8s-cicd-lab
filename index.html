@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>금융 AI 챗봇 서비스</title>
     <style>
-        /* 스타일은 그대로 유지 */
+        /* 스타일은 기존과 동일하게 유지 */
         body { font-family: 'Noto Sans KR', sans-serif; background-color: #e9ecef; display: flex; justify-content: center; align-items: center; height: 100vh; margin: 0; }
         .main-wrapper { display: flex; gap: 20px; width: 950px; height: 700px; }
         
@@ -109,11 +109,13 @@
     // [시나리오 데이터 관리 영역]
     // ==========================================
     
-    // 시나리오 1 & 2: 금리 정보
-    const currentRate = "4.0%";  // (현재 4.0% 상태 유지)
+    // 시나리오 1: 초기 상태 (변경 전)
+    // 금리가 낮아서 고객들이 불만인 상태...라고 가정합시다 ㅎㅎ
+    // [확인] 여기를 3.0%로 설정했습니다!
+    const currentRate = "3.0%";  
     
     // 시나리오 3: 보안 공지
-    const showSecurityAlert = true; // (현재 켜짐 상태 유지)
+    const showSecurityAlert = true; 
 
     // ==========================================
 
@@ -138,11 +140,12 @@
         addMessage(text, 'user');
         input.value = "";
 
-        // 챗봇 응답 로직 (상품별 상세 답변 추가)
+        // 챗봇 응답 로직
         setTimeout(() => {
             let reply = "죄송합니다. 이해하지 못했습니다.";
             
             if (text.includes("금리") || text.includes("이자")) {
+                // [확인] 변경 전: 아주 평범하고 사무적인 말투
                 reply = `현재 <b>직장인 예금</b>의 기본 금리는 <span class="highlight">${currentRate}</span> 입니다.<br>적금 상품은 최고 6.0%까지 제공됩니다.`;
             } 
             else if (text.includes("추천")) {
@@ -170,7 +173,7 @@
             }
 
             addMessage(reply, 'bot');
-        }, 400); // 반응 속도 살짝 빠르게 (0.4초)
+        }, 400); 
     }
 
     function addMessage(text, sender) {
