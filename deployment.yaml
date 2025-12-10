@@ -17,6 +17,6 @@ spec:
       containers:
       - name: my-web
         # 👇 [수정] 주소 앞에 Harbor IP 붙이기
-        image: 192.168.1.19/library/my-web-app:1f70b7de87d435b6ad78c1438418b6d2cbfa49e2
+        image: 192.168.10.20/library/my-web-app:1f70b7de87d435b6ad78c1438418b6d2cbfa49e2
         ports:
         - containerPort: 80
