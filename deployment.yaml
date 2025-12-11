@@ -12,11 +12,13 @@ spec:
       labels:
         app: my-chatbot
     spec:
-      imagePullSecrets:       # 👈 [추가] Harbor 열쇠 사용 선언
+      imagePullSecrets:       # Harbor 열쇠 (이건 그대로 두세요! 잘하셨습니다)
       - name: regcred
       containers:
       - name: my-web
-        # 👇 [수정] 주소 앞에 Harbor IP 붙이기
-        image: 192.168.10.20/library/my-web-app:44bcbab5fd6cf8a6a6daf314e37358cf16f2f36b
+        # 👇 [수정할 부분] 
+        # 기존: .../my-web-app:44bcb... (X)
+        # 변경: 젠킨스가 만든 이름(bank-app)과 첫 빌드 번호(v1)로 변경 (O)
+        image: 192.168.10.20/library/bank-app:v1
         ports:
         - containerPort: 80
