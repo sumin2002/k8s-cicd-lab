@@ -19,6 +19,6 @@ spec:
         # 👇 [수정할 부분] 
         # 기존: .../my-web-app:44bcb... (X)
         # 변경: 젠킨스가 만든 이름(bank-app)과 첫 빌드 번호(v1)로 변경 (O)
-        image: 192.168.10.20/library/bank-app:v1
+        image: 192.168.10.20/library/bank-app:v6
         ports:
         - containerPort: 80
