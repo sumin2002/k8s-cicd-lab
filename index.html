@@ -51,6 +51,20 @@
         .demo-section { background: white; border-radius: 10px; box-shadow: 0 2px 5px rgba(0,0,0,0.05); overflow: hidden; display: flex; flex-direction: column; flex: 1; min-height: 400px; }
         .demo-header { padding: 15px 20px; border-bottom: 1px solid #eee; font-weight: bold; display: flex; align-items: center; gap: 8px; background-color: #fff; }
         
+        /* [NEW] 보이스피싱 경고 배너 스타일 */
+        .security-alert {
+            background-color: #fff3cd;
+            color: #856404;
+            padding: 12px 20px;
+            font-size: 13px;
+            font-weight: bold;
+            border-bottom: 1px solid #ffeeba;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        .security-alert i { color: #dc3545; font-size: 16px; }
+
         .chat-area { flex: 1; padding: 30px; background-color: #f9f9f9; display: flex; flex-direction: column; overflow-y: auto; }
         
         .message {
@@ -102,96 +116,9 @@
         <div class="dashboard-cards">
             <div class="card">
                 <div class="card-title">Current Model Version</div>
-                <div class="card-value">v1.0</div>
+                <div class="card-value">v2.0</div>
                 <div class="sub-text" style="color: #2ecc71; margin-bottom: 8px;">
                     <i class="far fa-check-circle"></i> Stable Release
                 </div>
                 <div class="sub-text" style="color: #888; font-size: 13px;">
-                    <i class="far fa-clock"></i> Last Updated: <span id="lastModDisplay" style="font-weight: bold;">Loading...</span>
-                </div>
-            </div>
-        </div>
-
-        <div class="demo-section">
-            <div class="demo-header">
-                <i class="fas fa-comment-dots"></i> 실시간 상담
-            </div>
-            <div class="chat-area" id="chatArea">
-                <div class="message bot-message">
-                    안녕하세요! 금융 AI 상담원입니다.<br>
-                    <strong>v1.0</strong> 버전으로 업데이트되었습니다.<br>
-                    무엇을 도와드릴까요?
-                </div>
-            </div>
-            <div class="input-area">
-                <input type="text" class="chat-input" id="chatInput" placeholder="메시지를 입력하세요..." onkeypress="handleEnter(event)">
-                <button class="send-btn" onclick="sendMessage()">전송</button>
-            </div>
-        </div>
-    </main>
-
-    <script>
-        window.onload = function() {
-            const lastModDate = new Date(document.lastModified);
-            const formattedTime = lastModDate.getFullYear() + "-" + 
-                                  String(lastModDate.getMonth() + 1).padStart(2, '0') + "-" + 
-                                  String(lastModDate.getDate()).padStart(2, '0') + " " + 
-                                  String(lastModDate.getHours()).padStart(2, '0') + ":" + 
-                                  String(lastModDate.getMinutes()).padStart(2, '0') + ":" + 
-                                  String(lastModDate.getSeconds()).padStart(2, '0');
-            document.getElementById('lastModDisplay').innerText = formattedTime;
-        };
-
-        function sendMessage() {
-            const inputField = document.getElementById('chatInput');
-            const chatArea = document.getElementById('chatArea');
-            const messageText = inputField.value.trim();
-
-            if (messageText === "") return;
-
-            // 사용자 메시지 추가
-            const userMsgDiv = document.createElement('div');
-            userMsgDiv.className = 'message user-message';
-            userMsgDiv.innerText = messageText;
-            chatArea.appendChild(userMsgDiv);
-
-            inputField.value = '';
-            chatArea.scrollTop = chatArea.scrollHeight;
-
-            // 봇 응답 로직 (키워드에 따라 다른 답변)
-            setTimeout(() => {
-                const botMsgDiv = document.createElement('div');
-                botMsgDiv.className = 'message bot-message';
-                
-                let botResponse = "";
-                
-                // 3. 상황별 스마트 답변 로직
-                if (messageText.includes("대출")) {
-                    botResponse = "고객님, 현재 직장인을 위한 <strong>'내 집 마련 대출'</strong>이 최저 금리 <strong>5.2%</strong>로 이용 가능합니다.<br>한도 조회를 도와드릴까요?";
-                } else if (messageText.includes("금리") || messageText.includes("예금") || messageText.includes("적금")) {
-                    botResponse = "현재 가장 인기 있는 상품은 <strong>'매일매일 적금'</strong>으로 최고 <strong>연 6.0%</strong>의 금리를 제공합니다.";
-                } else if (messageText.includes("이체") || messageText.includes("송금")) {
-                    botResponse = "이체하실 은행과 계좌번호를 말씀해 주시면, 즉시 <strong>수수료 무료</strong>로 처리해 드리겠습니다.";
-                } else if (messageText.includes("안녕")) {
-                    botResponse = "반갑습니다! 오늘도 좋은 하루 보내세요. 금융 관련 궁금한 점이 있으신가요?";
-                } else {
-                    // 기본 답변 (2. [AI 응답] 말머리 삭제 완료)
-                    botResponse = `말씀하신 <strong>"${messageText}"</strong>에 대해 확인해 드리겠습니다.<br>잠시만 기다려 주세요.`;
-                }
-
-                botMsgDiv.innerHTML = botResponse;
-                
-                chatArea.appendChild(botMsgDiv);
-                chatArea.scrollTop = chatArea.scrollHeight;
-            }, 600);
-        }
-
-        function handleEnter(event) {
-            if (event.key === 'Enter') {
-                sendMessage();
-            }
-        }
-    </script>
-
-</body>
-</html>
+                    <i class="far fa-clock"></i> Last Updated: <span id="lastModDisplay" style="font-weight: bold;">Loading
