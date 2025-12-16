@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>NH AI Platform</title>
+    <title>금융 AI Platform</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <style>
         * { box-sizing: border-box; margin: 0; padding: 0; }
@@ -12,7 +12,7 @@
         /* 사이드바 스타일 (진한 남색) */
         .sidebar {
             width: 260px;
-            background-color: #002c5f; /* NH 농협 느낌의 딥 블루 */
+            background-color: #002c5f;
             color: white;
             display: flex;
             flex-direction: column;
@@ -33,47 +33,58 @@
             margin-bottom: 5px;
         }
         .menu-item:hover, .menu-item.active { background-color: #004085; color: white; }
-        .menu-item i { width: 20px; text-align: center; }
+        .menu-item i { width: 25px; text-align: center; }
 
         .sys-info { margin-top: auto; font-size: 12px; color: #8daac9; }
         .status-dot { color: #2ecc71; margin-right: 5px; }
 
         /* 메인 컨텐츠 영역 */
-        .main-content { flex: 1; padding: 30px; overflow-y: auto; }
+        .main-content { flex: 1; padding: 30px; overflow-y: auto; display: flex; flex-direction: column; }
 
         /* 상단 헤더 */
-        .header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 30px; }
+        .header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; }
         .page-title { font-size: 24px; font-weight: bold; display: flex; align-items: center; gap: 10px; }
-        .badges { display: flex; gap: 10px; }
-        .badge { background-color: #e3f2fd; color: #1565c0; padding: 5px 12px; border-radius: 20px; font-size: 12px; font-weight: bold; }
 
-        /* 상태 카드 영역 */
-        .dashboard-cards { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; margin-bottom: 30px; }
-        .card { background: white; padding: 20px; border-radius: 10px; box-shadow: 0 2px 5px rgba(0,0,0,0.05); }
+        /* 상태 카드 영역 (하나만 남김) */
+        .dashboard-cards { margin-bottom: 20px; }
+        .card { background: white; padding: 20px; border-radius: 10px; box-shadow: 0 2px 5px rgba(0,0,0,0.05); display: inline-block; min-width: 300px;}
         .card-title { font-size: 14px; color: #666; margin-bottom: 10px; }
-        .card-value { font-size: 22px; font-weight: bold; color: #0056b3; margin-bottom: 5px; }
+        .card-value { font-size: 28px; font-weight: bold; color: #0056b3; margin-bottom: 5px; }
         .sub-text { font-size: 12px; color: #888; }
-        .status-active { color: #2ecc71; display: flex; align-items: center; gap: 5px; }
 
-        /* 챗봇 데모 영역 */
-        .demo-section { background: white; border-radius: 10px; box-shadow: 0 2px 5px rgba(0,0,0,0.05); overflow: hidden; display: flex; flex-direction: column; height: 500px;}
-        .demo-header { padding: 15px 20px; border-bottom: 1px solid #eee; font-weight: bold; display: flex; align-items: center; gap: 8px; }
+        /* 챗봇 데모 영역 (확장됨) */
+        .demo-section { background: white; border-radius: 10px; box-shadow: 0 2px 5px rgba(0,0,0,0.05); overflow: hidden; display: flex; flex-direction: column; flex: 1; min-height: 400px; }
+        .demo-header { padding: 15px 20px; border-bottom: 1px solid #eee; font-weight: bold; display: flex; align-items: center; gap: 8px; background-color: #fff; }
         
-        .chat-area { flex: 1; padding: 30px; background-color: #f9f9f9; display: flex; flex-direction: column; }
-        .bot-message {
-            background-color: #e9ecef;
-            padding: 15px 20px;
-            border-radius: 0 15px 15px 15px;
-            max-width: 80%;
-            color: #444;
+        .chat-area { flex: 1; padding: 30px; background-color: #f9f9f9; display: flex; flex-direction: column; overflow-y: auto; }
+        
+        /* 말풍선 스타일 */
+        .message {
+            max-width: 70%;
+            padding: 12px 18px;
+            border-radius: 15px;
+            font-size: 15px;
             line-height: 1.5;
-            margin-bottom: 20px;
+            margin-bottom: 15px;
             box-shadow: 0 1px 2px rgba(0,0,0,0.1);
+            word-break: break-word;
+        }
+        .bot-message {
+            align-self: flex-start;
+            background-color: #e9ecef;
+            color: #444;
+            border-top-left-radius: 0;
+        }
+        .user-message {
+            align-self: flex-end;
+            background-color: #0064ff;
+            color: white;
+            border-top-right-radius: 0;
         }
         
         .input-area { padding: 20px; background: white; border-top: 1px solid #eee; display: flex; gap: 10px; }
-        .chat-input { flex: 1; padding: 12px; border: 1px solid #ddd; border-radius: 5px; outline: none; }
-        .send-btn { background-color: #0064ff; color: white; border: none; padding: 0 25px; border-radius: 5px; cursor: pointer; font-weight: bold; }
+        .chat-input { flex: 1; padding: 12px; border: 1px solid #ddd; border-radius: 5px; outline: none; font-size: 15px; }
+        .send-btn { background-color: #0064ff; color: white; border: none; padding: 0 25px; border-radius: 5px; cursor: pointer; font-weight: bold; font-size: 15px; transition: 0.2s;}
         .send-btn:hover { background-color: #0052cc; }
 
     </style>
@@ -82,13 +93,13 @@
 
     <aside class="sidebar">
         <div class="logo">
-            <i class="fas fa-university"></i> NH AI Platform
+            <i class="fas fa-chart-line"></i> 금융 AI Platform
         </div>
         <nav>
-            <div class="menu-item active"><i class="fas fa-tachometer-alt"></i> 대시보드</div>
-            <div class="menu-item"><i class="fas fa-robot"></i> 모델 관리 (MLOps)</div>
-            <div class="menu-item"><i class="fas fa-server"></i> 인프라 모니터링</div>
-            <div class="menu-item"><i class="fas fa-shield-alt"></i> 보안/컴플라이언스</div>
+            <div class="menu-item active"><i class="fas fa-headset"></i> AI 스마트 상담</div>
+            <div class="menu-item"><i class="fas fa-wallet"></i> 자산 현황</div>
+            <div class="menu-item"><i class="fas fa-exchange-alt"></i> 이체/송금</div>
+            <div class="menu-item"><i class="fas fa-store"></i> 대출 상품몰</div>
         </nav>
         <div class="sys-info">
             <p>System Info</p>
@@ -100,48 +111,73 @@
     <main class="main-content">
         <div class="header">
             <div class="page-title">
-                <i class="fas fa-share-alt"></i> 챗봇 모델 자동 배포 현황
+                <i class="fas fa-robot"></i> AI 스마트 상담
             </div>
-            <div class="badges">
-                <span class="badge">Namespace: Default</span>
-                <span class="badge">Node: Worker-1</span>
             </div>
-        </div>
 
         <div class="dashboard-cards">
             <div class="card">
                 <div class="card-title">Current Model Version</div>
-                <div class="card-value" style="color: #0064ff;">v3.0 (New Dashboard)</div>
-                <div class="sub-text"><i class="far fa-clock"></i> Updated: 2025-12-12 02:52:48</div>
-            </div>
-            <div class="card">
-                <div class="card-title">Pod Status</div>
-                <div class="card-value status-active"><i class="fas fa-circle" style="font-size: 12px;"></i> Normal (Active)</div>
-                <div class="sub-text">ReplicaSet: 2/2 Running</div>
-            </div>
-            <div class="card">
-                <div class="card-title">Pod Name (Host)</div>
-                <div class="card-value" style="font-size: 18px; color: #333;">finbot-deploy-767d8f8b47-v2mxp</div>
-                <div class="sub-text" style="color: #00bad1;">Auto-Scaling Enabled (HPA)</div>
+                <div class="card-value">v1.0</div>
+                <div class="sub-text"><i class="far fa-check-circle"></i> Stable Release</div>
             </div>
         </div>
 
         <div class="demo-section">
             <div class="demo-header">
-                <i class="fas fa-comment-dots"></i> 실시간 챗봇 테스트 (Live Demo)
+                <i class="fas fa-comment-dots"></i> 실시간 상담 창
             </div>
-            <div class="chat-area">
-                <div class="bot-message">
-                    안녕하세요! NH AI 금융 챗봇 <strong>v3.0 (New Dashboard)</strong> 모델입니다.<br>
-                    무엇을 도와드릴까요? (예: 대출, 금리, 상품 안내)
+            <div class="chat-area" id="chatArea">
+                <div class="message bot-message">
+                    안녕하세요! 금융 AI 상담원입니다.<br>
+                    <strong>v1.0</strong> 버전으로 업데이트되었습니다.<br>
+                    무엇을 도와드릴까요?
                 </div>
             </div>
             <div class="input-area">
-                <input type="text" class="chat-input" placeholder="메시지를 입력하세요...">
-                <button class="send-btn"><i class="fas fa-paper-plane"></i> 전송</button>
+                <input type="text" class="chat-input" id="chatInput" placeholder="메시지를 입력하세요..." onkeypress="handleEnter(event)">
+                <button class="send-btn" onclick="sendMessage()">전송</button>
             </div>
         </div>
     </main>
+
+    <script>
+        function sendMessage() {
+            const inputField = document.getElementById('chatInput');
+            const chatArea = document.getElementById('chatArea');
+            const messageText = inputField.value.trim();
+
+            if (messageText === "") return;
+
+            // 1. 사용자 메시지 추가
+            const userMsgDiv = document.createElement('div');
+            userMsgDiv.className = 'message user-message';
+            userMsgDiv.innerText = messageText;
+            chatArea.appendChild(userMsgDiv);
+
+            // 입력창 비우기 및 스크롤 내리기
+            inputField.value = '';
+            chatArea.scrollTop = chatArea.scrollHeight;
+
+            // 2. 봇 응답 시뮬레이션 (0.5초 뒤 응답)
+            setTimeout(() => {
+                const botMsgDiv = document.createElement('div');
+                botMsgDiv.className = 'message bot-message';
+                
+                // 간단한 응답 로직 (데모용)
+                botMsgDiv.innerHTML = `<strong>[AI 응답]</strong> 네, 고객님. 말씀하신 <strong>"${messageText}"</strong>에 대해 확인해 드리겠습니다.<br>잠시만 기다려 주세요.`;
+                
+                chatArea.appendChild(botMsgDiv);
+                chatArea.scrollTop = chatArea.scrollHeight;
+            }, 600);
+        }
+
+        function handleEnter(event) {
+            if (event.key === 'Enter') {
+                sendMessage();
+            }
+        }
+    </script>
 
 </body>
 </html>
