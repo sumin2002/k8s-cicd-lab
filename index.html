@@ -9,6 +9,7 @@
         * { box-sizing: border-box; margin: 0; padding: 0; }
         body { font-family: 'Noto Sans KR', sans-serif; display: flex; height: 100vh; background-color: #f4f7fa; color: #333; }
 
+        /* 사이드바 스타일 */
         .sidebar {
             width: 260px;
             background-color: #002c5f;
@@ -37,36 +38,27 @@
         .sys-info { margin-top: auto; font-size: 12px; color: #8daac9; }
         .status-dot { color: #2ecc71; margin-right: 5px; }
 
+        /* 메인 컨텐츠 영역 */
         .main-content { flex: 1; padding: 30px; overflow-y: auto; display: flex; flex-direction: column; }
 
+        /* 상단 헤더 */
         .header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; }
         .page-title { font-size: 24px; font-weight: bold; display: flex; align-items: center; gap: 10px; }
 
+        /* 상태 카드 영역 */
         .dashboard-cards { margin-bottom: 20px; }
         .card { background: white; padding: 20px; border-radius: 10px; box-shadow: 0 2px 5px rgba(0,0,0,0.05); display: inline-block; min-width: 300px;}
         .card-title { font-size: 14px; color: #666; margin-bottom: 10px; }
         .card-value { font-size: 28px; font-weight: bold; color: #0056b3; margin-bottom: 5px; }
         .sub-text { font-size: 12px; color: #888; }
 
+        /* 챗봇 데모 영역 */
         .demo-section { background: white; border-radius: 10px; box-shadow: 0 2px 5px rgba(0,0,0,0.05); overflow: hidden; display: flex; flex-direction: column; flex: 1; min-height: 400px; }
         .demo-header { padding: 15px 20px; border-bottom: 1px solid #eee; font-weight: bold; display: flex; align-items: center; gap: 8px; background-color: #fff; }
         
-        /* [NEW] 보이스피싱 경고 배너 스타일 */
-        .security-alert {
-            background-color: #fff3cd;
-            color: #856404;
-            padding: 12px 20px;
-            font-size: 13px;
-            font-weight: bold;
-            border-bottom: 1px solid #ffeeba;
-            display: flex;
-            align-items: center;
-            gap: 10px;
-        }
-        .security-alert i { color: #dc3545; font-size: 16px; }
-
         .chat-area { flex: 1; padding: 30px; background-color: #f9f9f9; display: flex; flex-direction: column; overflow-y: auto; }
         
+        /* 말풍선 스타일 */
         .message {
             max-width: 70%;
             padding: 12px 18px;
@@ -116,9 +108,79 @@
         <div class="dashboard-cards">
             <div class="card">
                 <div class="card-title">Current Model Version</div>
-                <div class="card-value">v2.0</div>
+                <div class="card-value">v1.0</div>
                 <div class="sub-text" style="color: #2ecc71; margin-bottom: 8px;">
                     <i class="far fa-check-circle"></i> Stable Release
                 </div>
                 <div class="sub-text" style="color: #888; font-size: 13px;">
-                    <i class="far fa-clock"></i> Last Updated: <span id="lastModDisplay" style="font-weight: bold;">Loading
+                    <i class="far fa-clock"></i> Updated: <span id="timeDisplay" style="font-weight: bold;"></span>
+                </div>
+            </div>
+        </div>
+
+        <div class="demo-section">
+            <div class="demo-header">
+                <i class="fas fa-comment-dots"></i> 실시간 상담 창
+            </div>
+            <div class="chat-area" id="chatArea">
+                <div class="message bot-message">
+                    안녕하세요! 금융 AI 상담원입니다.<br>
+                    <strong>v1.0</strong> 버전으로 업데이트되었습니다.<br>
+                    무엇을 도와드릴까요?
+                </div>
+            </div>
+            <div class="input-area">
+                <input type="text" class="chat-input" id="chatInput" placeholder="메시지를 입력하세요..." onkeypress="handleEnter(event)">
+                <button class="send-btn" onclick="sendMessage()">전송</button>
+            </div>
+        </div>
+    </main>
+
+    <script>
+        // [중요] Python 대신 JavaScript로 시간을 계산해서 화면에 찍는 코드입니다.
+        window.onload = function() {
+            const now = new Date();
+            const formattedTime = now.getFullYear() + "-" + 
+                                  String(now.getMonth() + 1).padStart(2, '0') + "-" + 
+                                  String(now.getDate()).padStart(2, '0') + " " + 
+                                  String(now.getHours()).padStart(2, '0') + ":" + 
+                                  String(now.getMinutes()).padStart(2, '0') + ":" + 
+                                  String(now.getSeconds()).padStart(2, '0');
+            
+            // 아까 만든 'timeDisplay' 자리에 시간을 넣습니다.
+            document.getElementById('timeDisplay').innerText = formattedTime;
+        };
+
+        function sendMessage() {
+            const inputField = document.getElementById('chatInput');
+            const chatArea = document.getElementById('chatArea');
+            const messageText = inputField.value.trim();
+
+            if (messageText === "") return;
+
+            const userMsgDiv = document.createElement('div');
+            userMsgDiv.className = 'message user-message';
+            userMsgDiv.innerText = messageText;
+            chatArea.appendChild(userMsgDiv);
+
+            inputField.value = '';
+            chatArea.scrollTop = chatArea.scrollHeight;
+
+            setTimeout(() => {
+                const botMsgDiv = document.createElement('div');
+                botMsgDiv.className = 'message bot-message';
+                botMsgDiv.innerHTML = `<strong>[AI 응답]</strong> 네, 고객님. 말씀하신 <strong>"${messageText}"</strong>에 대해 확인해 드리겠습니다.<br>잠시만 기다려 주세요.`;
+                chatArea.appendChild(botMsgDiv);
+                chatArea.scrollTop = chatArea.scrollHeight;
+            }, 600);
+        }
+
+        function handleEnter(event) {
+            if (event.key === 'Enter') {
+                sendMessage();
+            }
+        }
+    </script>
+
+</body>
+</html>
