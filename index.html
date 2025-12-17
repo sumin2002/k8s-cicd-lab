@@ -42,14 +42,14 @@
         .header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; }
         .page-title { font-size: 24px; font-weight: bold; display: flex; align-items: center; gap: 10px; }
 
-        /* [v1.0 특징] Grid가 아닌 옛날 방식 레이아웃 */
+        /* [v1.0 스타일] 카드가 나열형 (Grid 아님) */
         .dashboard-cards { margin-bottom: 20px; }
         .card { 
             background: white; 
             padding: 20px; 
             border-radius: 10px; 
             box-shadow: 0 2px 5px rgba(0,0,0,0.05); 
-            display: inline-block; /* v1은 옆으로 그냥 나열됨 */
+            display: inline-block; 
             min-width: 300px;
             margin-right: 10px;
         }
@@ -60,8 +60,6 @@
         .demo-section { background: white; border-radius: 10px; box-shadow: 0 2px 5px rgba(0,0,0,0.05); overflow: hidden; display: flex; flex-direction: column; flex: 1; min-height: 400px; }
         .demo-header { padding: 15px 20px; border-bottom: 1px solid #eee; font-weight: bold; display: flex; align-items: center; gap: 8px; background-color: #fff; }
         
-        /* v1.0에는 보이스피싱 경고 배너가 없음 */
-
         .chat-area { flex: 1; padding: 30px; background-color: #f9f9f9; display: flex; flex-direction: column; overflow-y: auto; }
         
         .message {
@@ -142,6 +140,7 @@
     </main>
 
     <script>
+        // 파일의 실제 수정 시간(Last Modified)을 가져와서 보여주는 코드
         window.onload = function() {
             const lastModDate = new Date(document.lastModified);
             const formattedTime = lastModDate.getFullYear() + "-" + 
@@ -171,15 +170,12 @@
             setTimeout(() => {
                 const botMsgDiv = document.createElement('div');
                 botMsgDiv.className = 'message bot-message';
-                
                 let botResponse = "";
                 
-                // [v1.0] 구버전 답변 (금리가 높거나 기본 답변)
+                // [v1.0 로직] 금리가 5.2%로 높음
                 if (messageText.includes("대출")) {
-                    // v1: 금리가 5.2%로 높음
                     botResponse = "고객님, 현재 직장인을 위한 <strong>'내 집 마련 대출'</strong>이 최저 금리 <strong>5.2%</strong>로 이용 가능합니다.<br>한도 조회를 도와드릴까요?";
                 } else if (messageText.includes("금리") || messageText.includes("예금") || messageText.includes("적금")) {
-                    // v1: 적금 금리가 4.0%
                     botResponse = "현재 가장 인기 있는 상품은 <strong>'매일매일 적금'</strong>으로 최고 <strong>연 4.0%</strong>의 금리를 제공합니다.";
                 } else if (messageText.includes("이체") || messageText.includes("송금")) {
                     botResponse = "이체하실 은행과 계좌번호를 말씀해 주시면, 즉시 <strong>수수료 무료</strong>로 처리해 드리겠습니다.";
@@ -190,7 +186,6 @@
                 }
 
                 botMsgDiv.innerHTML = botResponse;
-                
                 chatArea.appendChild(botMsgDiv);
                 chatArea.scrollTop = chatArea.scrollHeight;
             }, 600);
@@ -202,6 +197,5 @@
             }
         }
     </script>
-
 </body>
 </html>
