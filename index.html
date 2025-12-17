@@ -42,7 +42,7 @@
         .header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; }
         .page-title { font-size: 24px; font-weight: bold; display: flex; align-items: center; gap: 10px; }
 
-        /* [v1.0 스타일] 카드가 나열형 (Grid 아님) */
+        /* [v1.0 스타일] 나열형 카드 */
         .dashboard-cards { margin-bottom: 20px; }
         .card { 
             background: white; 
@@ -60,6 +60,8 @@
         .demo-section { background: white; border-radius: 10px; box-shadow: 0 2px 5px rgba(0,0,0,0.05); overflow: hidden; display: flex; flex-direction: column; flex: 1; min-height: 400px; }
         .demo-header { padding: 15px 20px; border-bottom: 1px solid #eee; font-weight: bold; display: flex; align-items: center; gap: 8px; background-color: #fff; }
         
+        /* v1.0: 경고 배너 없음 */
+
         .chat-area { flex: 1; padding: 30px; background-color: #f9f9f9; display: flex; flex-direction: column; overflow-y: auto; }
         
         .message {
@@ -140,15 +142,21 @@
     </main>
 
     <script>
-        // 파일의 실제 수정 시간(Last Modified)을 가져와서 보여주는 코드
+        // [복구됨] 파일의 실제 수정 시간을 가져와서 표시하는 함수
         window.onload = function() {
+            // document.lastModified는 이 파일이 서버에 저장된 시간을 가져옵니다.
             const lastModDate = new Date(document.lastModified);
-            const formattedTime = lastModDate.getFullYear() + "-" + 
-                                  String(lastModDate.getMonth() + 1).padStart(2, '0') + "-" + 
-                                  String(lastModDate.getDate()).padStart(2, '0') + " " + 
-                                  String(lastModDate.getHours()).padStart(2, '0') + ":" + 
-                                  String(lastModDate.getMinutes()).padStart(2, '0') + ":" + 
-                                  String(lastModDate.getSeconds()).padStart(2, '0');
+            
+            // 만약 날짜가 제대로 안 나오면 현재 시간(new Date())으로 대체
+            const targetDate = isNaN(lastModDate.getTime()) ? new Date() : lastModDate;
+
+            const formattedTime = targetDate.getFullYear() + "-" + 
+                                  String(targetDate.getMonth() + 1).padStart(2, '0') + "-" + 
+                                  String(targetDate.getDate()).padStart(2, '0') + " " + 
+                                  String(targetDate.getHours()).padStart(2, '0') + ":" + 
+                                  String(targetDate.getMinutes()).padStart(2, '0') + ":" + 
+                                  String(targetDate.getSeconds()).padStart(2, '0');
+            
             document.getElementById('lastModDisplay').innerText = formattedTime;
         };
 
@@ -170,9 +178,10 @@
             setTimeout(() => {
                 const botMsgDiv = document.createElement('div');
                 botMsgDiv.className = 'message bot-message';
+                
                 let botResponse = "";
                 
-                // [v1.0 로직] 금리가 5.2%로 높음
+                // v1.0 로직
                 if (messageText.includes("대출")) {
                     botResponse = "고객님, 현재 직장인을 위한 <strong>'내 집 마련 대출'</strong>이 최저 금리 <strong>5.2%</strong>로 이용 가능합니다.<br>한도 조회를 도와드릴까요?";
                 } else if (messageText.includes("금리") || messageText.includes("예금") || messageText.includes("적금")) {
@@ -186,6 +195,7 @@
                 }
 
                 botMsgDiv.innerHTML = botResponse;
+                
                 chatArea.appendChild(botMsgDiv);
                 chatArea.scrollTop = chatArea.scrollHeight;
             }, 600);
