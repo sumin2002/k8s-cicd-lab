@@ -16,7 +16,7 @@ spec:
       - name: regcred
       containers:
       - name: my-web
-        image: 192.168.10.20/library/bank-app:v9
+        image: 192.168.10.20/library/bank-app:v10
         imagePullPolicy: Always
         ports:
         - containerPort: 80
